@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pier Master</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       TITLE SCREEN
+  ════════════════════════════════════════════ -->
+  <div id="screen-title" class="screen active">
+    <canvas id="title-canvas"></canvas>
+    <div class="title-content">
+      <h1 class="title-logo">PIER <span>MASTER</span></h1>
+      <p class="title-sub">Cast your line. Fill your bucket. Rule the dock.</p>
+      <button id="btn-start" class="btn-primary">&#9654; Cast Off</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       GAME SCREEN
+  ════════════════════════════════════════════ -->
+  <div id="screen-game" class="screen">
+
+    <!-- Main game canvas -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- ── HUD: top-left buttons ── -->
+    <div id="hud-left">
+      <button class="hud-btn" id="btn-shop" aria-label="Rod Shop">
+        <span class="hud-icon">&#127907;</span>
+        <span class="hud-label">Shop</span>
+      </button>
+      <button class="hud-btn" id="btn-quests" aria-label="Quest Log">
+        <span class="hud-icon">&#128218;</span>
+        <span class="hud-label">Quests</span>
+      </button>
+    </div>
+
+    <!-- ── HUD: top-center gold ── -->
+    <div id="hud-gold">
+      <span class="gold-icon">&#127775;</span>
+      <span id="gold-val">0</span><span class="gold-suffix">g</span>
+    </div>
+
+    <!-- ── Cast button ── -->
+    <button id="btn-cast" class="btn-cast" aria-label="Cast fishing line">
+      &#127907; Cast!
+    </button>
+
+    <!-- ── QTE overlay ── -->
+    <div id="qte-overlay" aria-hidden="true">
+      <div id="qte-fish-name">Something is biting!</div>
+      <div id="qte-bar-wrap">
+        <div id="qte-zones">
+          <div class="qte-miss"  id="qte-z-miss-l"></div>
+          <div class="qte-ok"   id="qte-z-ok-l"></div>
+          <div class="qte-good" id="qte-z-good"></div>
+          <div class="qte-ok"   id="qte-z-ok-r"></div>
+          <div class="qte-miss" id="qte-z-miss-r"></div>
+        </div>
+        <div id="qte-marker"></div>
+      </div>
+      <p id="qte-hint">Tap / Click to reel in!</p>
+      <div id="qte-result"></div>
+    </div>
+
+    <!-- ── Player notice ── -->
+    <div id="player-notice" aria-live="polite"></div>
+
+    <!-- ── Caught splash ── -->
+    <div id="caught-splash" aria-live="assertive"></div>
+
+    <!-- ── Move hint ── -->
+    <p id="move-hint">&#8592; &#8594; to walk &nbsp;|&nbsp; Space to cast</p>
+
+    <!-- ── Side panel toggle ── -->
+    <button id="panel-toggle" aria-label="Toggle collection panel">&#9776;</button>
+
+    <!-- ── Side panel ── -->
+    <aside id="side-panel" aria-label="Collection panel">
+      <section class="panel-section">
+        <h2 class="panel-title">&#129531; Collection</h2>
+        <div id="bucket-wrap">
+          <div id="bucket">
+            <div id="bucket-fill"></div>
+            <span id="bucket-count">0</span>
+          </div>
+        </div>
+        <div id="catch-list">
+          <p class="catch-empty">No catches yet</p>
+        </div>
+      </section>
+
+      <section class="panel-section">
+        <h2 class="panel-title">&#127908; Sound</h2>
+        <div class="sound-row">
+          <label for="vol-music">Music</label>
+          <input type="range" id="vol-music" min="0" max="100" value="60" />
+        </div>
+        <div class="sound-row">
+          <label for="vol-sfx">SFX</label>
+          <input type="range" id="vol-sfx" min="0" max="100" value="80" />
+        </div>
+      </section>
+
+      <section class="panel-section">
+        <h2 class="panel-title">&#127907; Active Rod</h2>
+        <div id="active-rod-card">
+          <div id="active-rod-name">Starter Rod</div>
+          <div id="active-rod-desc">Balanced — standard grip</div>
+        </div>
+      </section>
+    </aside>
+
+    <!-- ═══════════════════════════════════════════
+         SHOP MODAL
+    ════════════════════════════════════════════ -->
+    <div id="modal-shop" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Rod Shop" aria-hidden="true">
+      <div class="modal">
+        <div class="modal-header modal-header--blue">
+          <h2>&#127907; Rods 4 Sale</h2>
+          <button class="modal-close" data-close="modal-shop" aria-label="Close shop">&#10005;</button>
+        </div>
+        <div class="modal-body">
+          <div id="shop-grid" class="shop-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         QUESTS MODAL
+    ════════════════════════════════════════════ -->
+    <div id="modal-quests" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Quest Log" aria-hidden="true">
+      <div class="modal">
+        <div class="modal-header modal-header--purple">
+          <h2>&#128218; Quest Log</h2>
+          <button class="modal-close" data-close="modal-quests" aria-label="Close quests">&#10005;</button>
+        </div>
+        <div class="modal-body" id="quest-body"></div>
+      </div>
+    </div>
+
+  </div><!-- /screen-game -->
+
+  <!-- ═══════════════════════════════════════════
+       SCRIPTS — order matters
+  ════════════════════════════════════════════ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/save.js"></script>
+  <script src="js/physics.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/ui.js"></script>
+
+</body>
+</html>
